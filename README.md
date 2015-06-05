@@ -4,15 +4,16 @@
 
 Scraper and parser for "Apple Service and Support Coverage" page
 
-# scraper = AppleServiceAndSupportCoverageScraper.new(imei)
+ServiceAndSupportCoverageScraper.new(imei)
+
 creates new scraper instance
 
-# scraper.scrape
+# .scrape
 returns "Apple Service and Support Coverage" page source for given IMEI
 
 returns empty string if IMEI is invalid
 
-# scraper.parse
+# .parse
 returns hash conforming to json schema (see spec/support/json/schemas/*.json)
 
 returns nil if IMEI is invalid

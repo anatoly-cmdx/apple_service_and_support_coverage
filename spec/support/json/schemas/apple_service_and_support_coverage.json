@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "required": [
+    "product_name",
+    "product_sn",
+    "is_purchase_date_valid",
+    "is_phone_support_active",
+    "is_service_coverage_active"
+  ],
+  "properties": {
+    "product_name": { "type": "string" },
+    "product_sn": { "type": "string" },
+    "is_purchase_date_valid": { "type": "boolean" },
+    "is_phone_support_active": { "type": "boolean" },
+    "dt_phone_support_expiration": { "type": "string", "format": "date" },
+    "is_service_coverage_active": { "type": "boolean" },
+    "dt_service_coverage_expiration": { "type": "string", "format": "date" }
+  }
+}

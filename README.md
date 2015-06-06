@@ -14,7 +14,7 @@ Scraper and parser for "Apple Service and Support Coverage" page
 
 * returns "Apple Service and Support Coverage" page source for given IMEI
 
-* returns empty string if IMEI is invalid
+* returns nil if IMEI is invalid
 
 ----
 
@@ -24,6 +24,14 @@ Scraper and parser for "Apple Service and Support Coverage" page
 
 * returns nil if IMEI is invalid
 
-hash example:
+----
+
+### hash examples for "repairs and service coverage"
+
+#### active:
 
 `{:product_name=>"iPhone 5c", :product_sn=>"013977000323877", :is_purchase_date_valid=>true, :is_phone_support_active=>true, :is_service_coverage_active=>true, :dt_service_coverage_expiration=>"2016-08-10", :dt_phone_support_expiration=>"2016-08-10"}`
+
+#### expired:
+
+`{:product_name=>"iPhone 5c", :product_sn=>"013896000639712", :is_purchase_date_valid=>true, :is_phone_support_active=>false, :dt_service_coverage_expiration=>nil, :is_service_coverage_active=>false, :dt_phone_support_expiration=>nil}`

@@ -18,10 +18,10 @@ RSpec.describe AppleServiceAndSupportCoverageScraper do
     end
 
     context 'with invalid IMEI' do
-      it 'returns empty string' do
+      it 'returns nil' do
         scraper = AppleServiceAndSupportCoverageScraper.new(invalid_imei)
         page = scraper.scrape
-        expect(page).to be_empty
+        expect(page).to be_nil
       end
     end
   end
@@ -37,12 +37,12 @@ RSpec.describe AppleServiceAndSupportCoverageScraper do
         expect(parsed_active).to match_schema json_schema
       end
 
-      it 'sets flag "service coverage is active" to "true"' do
+      it 'sets flag "service coverage is active" to true' do
         expect(parsed_active[:is_service_coverage_active]).to be true
       end
 
-      it 'contains "estimated expiration date"' do
-        expect(parsed_active[:dt_service_coverage_expiration]).to_not be_nil
+      it 'contains "estimated expiration date" in ISO8601 format ("YYYY-MM-DD")' do
+        expect(parsed_active[:dt_service_coverage_expiration].length).to be(10)
       end
     end
 
@@ -54,16 +54,16 @@ RSpec.describe AppleServiceAndSupportCoverageScraper do
         expect(parsed_expired).to match_schema json_schema
       end
 
-      it 'sets flag "service coverage is active" to "false"' do
+      it 'sets flag "service coverage is active" to false' do
         expect(parsed_expired[:is_service_coverage_active]).to be false
       end
 
-      it 'does not contain "estimated expiration date"' do
-        expect(parsed_expired).to_not include(:dt_service_coverage_expiration)
+      it 'returns nil for "estimated expiration date"' do
+        expect(parsed_expired[:dt_service_coverage_expiration]).to be_nil
       end
     end
 
-    context 'with invalid imei' do
+    context 'with invalid IMEI' do
       let(:scraper_invalid) { AppleServiceAndSupportCoverageScraper.new(:invalid_imei) }
       let!(:parsed_invalid) { scraper_invalid.parse }
 

@@ -12,7 +12,6 @@ class AppleServiceAndSupportCoverageScraper
 
   def scrape
     return @scraped_page if @scraped_page
-    @scraped_page = ''
 
     new_session(allowed_urls: allowed_urls)
 
@@ -40,7 +39,7 @@ class AppleServiceAndSupportCoverageScraper
 
     # What if @scraped_page is empty?
     # Should we return nil, {}, or {product_name: nil, product_sn: nil, ...}?
-    return nil if @scraped_page.empty?
+    return nil unless @scraped_page
 
     @html = Nokogiri::HTML(@scraped_page)
 
@@ -55,16 +54,10 @@ class AppleServiceAndSupportCoverageScraper
       product_sn:   parsed[:product_sn][:text],
       is_purchase_date_valid: parsed[:registration][:has_true_id],
       is_phone_support_active: parsed[:phone_support][:has_true_id],
-      is_service_coverage_active: parsed[:service_coverage][:has_true_id]
+      dt_service_coverage_expiration: expiration_date(parsed[:service_details][:el]),
+      is_service_coverage_active: parsed[:service_coverage][:has_true_id],
+      dt_phone_support_expiration: expiration_date(parsed[:phone_details][:el])
     }
-
-    dt = expiration_date(parsed[:service_details][:el])
-    @parsed_page.merge!(dt_service_coverage_expiration: dt) if dt
-
-    dt = expiration_date(parsed[:phone_details][:el])
-    @parsed_page.merge!(dt_phone_support_expiration: dt) if dt
-
-    @parsed_page
   end
 
   def parse_elements
@@ -83,6 +76,7 @@ class AppleServiceAndSupportCoverageScraper
         has_true_id: el.attributes['id'].value.include?('-true'),
         text: el.text.strip
       )
+    rescue
     end
     element
   end
@@ -93,11 +87,9 @@ class AppleServiceAndSupportCoverageScraper
            .map { |el| el.text.strip }
            .find { |s| s =~ /#{ adjacent_text }/ }
            .gsub(adjacent_text, '')
-      dt_date = Date.parse(dt).iso8601
+      Date.parse(dt).iso8601
     rescue
-      dt_date = nil
     end
-    dt_date
   end
 
   def elements_paths
